@@ -6,5 +6,8 @@ Every day, the app will email you, asking for your thoughts on how the day went.
 
 I aimed to make this as lightweight as possible. It uses a very simple SQLite database for storing journal entries, and the only setup requirement is a mail server of some kind. It is very easy to create a new gmail account and link it by changing the SMTP and IMAP addresses in the config file.
 
-## Running a Mail Journal server
+## Configuration
+TODO 
+
+## Hosting
 TODO
