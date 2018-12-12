@@ -1,0 +1,19 @@
+[package]
+name = "mail-journal"
+version = "0.1.0"
+authors = ["Declan Hopkins <hopkins.declan@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+lettre = "0.8"
+lettre_email = "0.8"
+ron = "0.4.0"
+serde = "1.0.81"
+chrono = "0.4"
+imap = "0.10.0"
+native-tls = "0.2"
+mailparse = "0.6.4"
+
+[dependencies.rusqlite]
+version = "0.15.0"
+features = ["bundled"]
