@@ -1,4 +1,9 @@
-# Mail Journal
+<a href="https://github.com/Dooskington/Mail-Journal/">
+    <img src="https://i.imgur.com/ej63msZ.png" alt="Mail Journal logo" title="Mail Journal" align="right" height="64" />
+</a>
+
+Mail Journal
+============
 
 A small utility application that helps you keep a small daily journal, while reminding you of your journal entry from 1 year prior.
 
