@@ -8,12 +8,13 @@ use lettre::{EmailTransport, SmtpTransport};
 use lettre_email::EmailBuilder;
 use mailparse::*;
 use rusqlite::{Connection, NO_PARAMS};
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
+use ron::ser::PrettyConfig;
 use std::collections::HashSet;
-use std::fs::File;
+use std::fs::OpenOptions;
 use std::io::prelude::*;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Config {
     target_email: String,
     target_name: String,
@@ -23,6 +24,21 @@ struct Config {
     journal_email: String,
     journal_email_password: String,
     utc_reminder_hour: i64,
+}
+
+impl Default for Config {
+    fn default() -> Config { 
+        Config {
+            target_email: "john.smith@example.com".to_string(),
+            target_name: "John Smith".to_string(),
+            db_filename: "mail-journal.db".to_string(),
+            journal_email_smtp: "smtp.example.com".to_string(),
+            journal_email_imap: "imap.example.com".to_string(),
+            journal_email: "mail-journal@example.com".to_string(),
+            journal_email_password: "password".to_string(),
+            utc_reminder_hour: 0
+        }
+    }
 }
 
 struct JournalEntry {
@@ -78,9 +94,31 @@ pub const SLEEP_TIME_SECONDS: i64 = 2;
 
 fn main() {
     // Load config file
-    let mut file = File::open(CONFIG_PATH).unwrap();
+    let mut file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(CONFIG_PATH)
+        .expect("Failed to open config file!");
+
     let mut config_str = String::new();
     file.read_to_string(&mut config_str).unwrap();
+
+    // Config is empty, create default config and exit.
+    if config_str.is_empty() {
+        let pretty = PrettyConfig {
+            depth_limit: 2,
+            separate_tuple_members: true,
+            enumerate_arrays: true,
+            ..PrettyConfig::default()
+        };
+        
+        let s = ron::ser::to_string_pretty(&Config::default(), pretty).expect("Failed to serialize config!");
+        file.write_all(s.as_bytes()).expect("Failed to write config file!");
+
+        println!("No config file was found, so a default one was created. Please edit it and run Mail Journal again.");
+        return;
+    }
 
     // Deserialize config
     let config: Config = match ron::de::from_str(&config_str) {
