@@ -17,12 +17,19 @@ My aim was to make this as lightweight as possible. It uses a very simple SQLite
 When you run Mail Journal for the first time, a default config file will be created. You will need to input your own values for the following:
 
 `target_email`: The email that you want to send the daily reminder to (your personal email).
+
 `target_name`: Your name, for email purposes.
+
 `db_filename`: The name of the database file that will be created/used.
+
 `journal_email_smtp`: SMTP server domain for your journal email.
+
 `journal_email_imap`: IMAP server domain for your journal email.
+
 `journal_email`: The email address/username that Mail Journal will use.
+
 `journal_email_password`: The password to the above email.
+
 `utc_reminder_hour`: The hour during the day, in UTC, when you want to be reminded. Must be between 0 and 23 (inclusive).
 
 ## Hosting
