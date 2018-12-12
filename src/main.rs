@@ -7,9 +7,9 @@ use lettre::smtp::ConnectionReuseParameters;
 use lettre::{EmailTransport, SmtpTransport};
 use lettre_email::EmailBuilder;
 use mailparse::*;
-use rusqlite::{Connection, NO_PARAMS};
-use serde::{Serialize, Deserialize};
 use ron::ser::PrettyConfig;
+use rusqlite::{Connection, NO_PARAMS};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
@@ -27,7 +27,7 @@ struct Config {
 }
 
 impl Default for Config {
-    fn default() -> Config { 
+    fn default() -> Config {
         Config {
             target_email: "john.smith@example.com".to_string(),
             target_name: "John Smith".to_string(),
@@ -36,7 +36,7 @@ impl Default for Config {
             journal_email_imap: "imap.example.com".to_string(),
             journal_email: "mail-journal@example.com".to_string(),
             journal_email_password: "password".to_string(),
-            utc_reminder_hour: 0
+            utc_reminder_hour: 0,
         }
     }
 }
@@ -88,10 +88,6 @@ impl Email {
 pub const CONFIG_PATH: &'static str = "config.ron";
 pub const SLEEP_TIME_SECONDS: i64 = 2;
 
-// TODO
-// - Create default config if one isn't found
-// - docs
-
 fn main() {
     // Load config file
     let mut file = OpenOptions::new()
@@ -112,9 +108,11 @@ fn main() {
             enumerate_arrays: true,
             ..PrettyConfig::default()
         };
-        
-        let s = ron::ser::to_string_pretty(&Config::default(), pretty).expect("Failed to serialize config!");
-        file.write_all(s.as_bytes()).expect("Failed to write config file!");
+
+        let s = ron::ser::to_string_pretty(&Config::default(), pretty)
+            .expect("Failed to serialize config!");
+        file.write_all(s.as_bytes())
+            .expect("Failed to write config file!");
 
         println!("No config file was found, so a default one was created. Please edit it and run Mail Journal again.");
         return;
@@ -148,7 +146,7 @@ fn main() {
     if utc < remind_time {
         println!("Journal reminder for today is scheduled at {}", remind_time);
     } else {
-        did_remind = true;
+        //did_remind = true;
         println!("Journal reminder for today has been sent.");
     }
 
@@ -193,6 +191,12 @@ fn main() {
 
 fn initialize_db(config: &Config) {
     let sql_conn = Connection::open(&config.db_filename).expect("Failed to open database!");
+
+    // NOTE (Declan, 12/12/2018)
+    // I am using separate day, month, year columns in this database
+    // because SQLite does not have a sufficient DATETIME type, or functions
+    // to do complicated queries with them. Therefore it's just easier to manage
+    // each date component as an integer in our case.
 
     sql_conn
         .execute(

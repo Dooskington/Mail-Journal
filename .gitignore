@@ -1,5 +1,6 @@
 config.ron
 *.db
+
 .DS_Store
 /target
 **/*.rs.bk
