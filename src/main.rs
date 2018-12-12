@@ -146,7 +146,7 @@ fn main() {
     if utc < remind_time {
         println!("Journal reminder for today is scheduled at {}", remind_time);
     } else {
-        //did_remind = true;
+        did_remind = true;
         println!("Journal reminder for today has been sent.");
     }
 
