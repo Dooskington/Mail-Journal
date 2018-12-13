@@ -40,3 +40,6 @@ Mail Journal uses a very small SQLite database to store journal entries. If you 
 
 ## Issues
 Please report any issues you may have. In particular, the IMAP/SMTP code may be slightly buggy since this project was my first time working with that kind of stuff.
+
+## Notes
+Thanks to [Arthur](https://github.com/wafflez180) for making the project icon!
