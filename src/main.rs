@@ -404,9 +404,8 @@ fn search_inbox_latest(config: &Config) -> imap::error::Result<HashSet<imap::typ
     imap_session.select("INBOX")?;
 
     let query = format!(
-        "UNSEEN FROM {} SINCE {}",
-        &config.target_email,
-        Utc::now().format("%d-%b-%Y").to_string()
+        "UNSEEN FROM {}",
+        &config.target_email
     );
     let seqs = imap_session.search(query)?;
 
